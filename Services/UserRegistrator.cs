@@ -1,5 +1,6 @@
 ﻿using ObsidianTgBot.DataBase;
 using ObsidianTgBot.Models;
+using ObsidianTgBot.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -9,15 +10,14 @@ namespace ObsidianTgBot.Services;
 public static class UserRegistrator
 {
     public static async Task RegisterAsync(ITelegramBotClient botClient, Message message, string text, long userId,
-        CancellationToken ct)
+        CancellationToken cancellationToken)
     {
         var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length != 3 || !parts[2].Contains('/'))
         {
-            await botClient.SendMessage(message.Chat.Id,
-                "❌ Неверный формат. Используй:\n`/register ТОКЕН Owner/Repo`", ParseMode.Markdown,
-                cancellationToken: ct);
+            await botClient.SendMessage(message.Chat.Id, Strings.ErrorInvalidRegistrationFormat, ParseMode.Markdown,
+                cancellationToken: cancellationToken);
             return;
         }
 
@@ -27,7 +27,7 @@ public static class UserRegistrator
         var repo = repoParts[1];
 
         await using var db = new BotDbContext();
-        var user = await db.Users.FindAsync(new object[] { userId }, ct);
+        var user = await db.Users.FindAsync([userId], cancellationToken);
 
         if (user == null)
         {
@@ -39,11 +39,11 @@ public static class UserRegistrator
         user.RepoOwner = owner;
         user.RepoName = repo;
 
-        await db.SaveChangesAsync(ct);
+        await db.SaveChangesAsync(cancellationToken);
 
         try
         {
-            await botClient.DeleteMessage(message.Chat.Id, message.MessageId, ct);
+            await botClient.DeleteMessage(message.Chat.Id, message.MessageId, cancellationToken);
         }
         catch
         {
@@ -52,6 +52,6 @@ public static class UserRegistrator
 
         await botClient.SendMessage(message.Chat.Id,
             "✅ Регистрация успешна! Твой токен в безопасности, а сообщение удалено.\nТеперь просто отправляй мне текст, и я буду создавать заметки.",
-            cancellationToken: ct);
+            cancellationToken: cancellationToken);
     }
 }

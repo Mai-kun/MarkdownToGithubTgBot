@@ -11,7 +11,7 @@ var config = new ConfigurationBuilder()
 var botToken = config["BotToken"];
 if (string.IsNullOrEmpty(botToken))
 {
-    Console.WriteLine("Ошибка: Токены не найдены!");
+    Console.WriteLine(@"Error: Token not found!");
     return;
 }
 
@@ -19,22 +19,22 @@ await using (var db = new BotDbContext())
 {
     if (db.Database.EnsureCreated())
     {
-        Console.WriteLine("База данных подключена");
+        Console.WriteLine(@"Database connected.");
     }
 }
 
 var botClient = new TelegramBotClient(botToken);
-using var cts = new CancellationTokenSource();
+using var cancellationTokenSource = new CancellationTokenSource();
 
 botClient.StartReceiving(
     UpdateHandler.HandleUpdateAsync,
     ErrorHandler.HandleErrorAsync,
-    cancellationToken: cts.Token
+    cancellationToken: cancellationTokenSource.Token
 );
 
 var me = await botClient.GetMe();
-Console.WriteLine($"✅ Бот @{me.Username} запущен и готов к работе.");
-Console.WriteLine("Нажми Enter для остановки...");
+Console.WriteLine($@"✅ Bot @{me.Username} started and ready to work.");
+Console.WriteLine(@"Press Enter to stop...");
 Console.ReadLine();
 
-cts.Cancel();
+cancellationTokenSource.Cancel();
