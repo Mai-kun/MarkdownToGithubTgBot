@@ -8,7 +8,7 @@ var config = new ConfigurationBuilder()
              .AddEnvironmentVariables()
              .Build();
 
-var botToken = config["BotToken"];
+var botToken = config["BotToken"] ?? (args.Length > 0 ? args[0] : null);
 if (string.IsNullOrEmpty(botToken))
 {
     Console.WriteLine(@"Error: Token not found!");
