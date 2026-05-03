@@ -15,7 +15,7 @@ public static class UpdateHandler
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        if (update.Type != UpdateType.Message || update.Message!.Type != MessageType.Text)
+        if (update.Message == null)
         {
             return;
         }
@@ -27,7 +27,7 @@ public static class UpdateHandler
 
         await using var db = new BotDbContext();
         var user = await db.Users.FindAsync([userId], cancellationToken);
-        var lang = user?.LanguageCode ?? message.From.LanguageCode ?? "en";
+        var lang = user?.LanguageCode ?? message.From.LanguageCode ?? "ru";
 
         var culture = new CultureInfo(lang);
         CultureInfo.CurrentUICulture = culture;
