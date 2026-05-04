@@ -15,27 +15,46 @@ public static class UpdateHandler
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        if (update.Message == null)
+        var updateFrom = update.CallbackQuery?.From ?? update.Message?.From;
+        if (updateFrom is null)
         {
             return;
         }
 
+        var languageCode = updateFrom.LanguageCode;
+        var userId = updateFrom.Id;
+
+        await using var dbContext = new BotDbContext();
+        var user = await UserRegistrator.GetOrCreateUserAsync(userId, dbContext, languageCode,
+            cancellationToken);
+
+        if (update.CallbackQuery is not null)
+        {
+            await CallbackHandler.HandleCallbackQueryAsync(botClient, update.CallbackQuery, user, cancellationToken);
+            if (dbContext.ChangeTracker.HasChanges())
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            return;
+        }
+
         var message = update.Message;
+        if (message is null)
+        {
+            return;
+        }
+
         var text = message.Text?.Trim() ?? message.Caption?.Trim() ?? "";
         var chatId = message.Chat.Id;
-        var userId = message.From!.Id;
 
-        await using var db = new BotDbContext();
-        var user = await db.Users.FindAsync([userId], cancellationToken);
-        var lang = user?.LanguageCode ?? message.From.LanguageCode ?? "ru";
-
-        var culture = new CultureInfo(lang);
+        var culture = new CultureInfo(user.LanguageCode);
         CultureInfo.CurrentUICulture = culture;
         CultureInfo.CurrentCulture = culture;
 
         try
         {
-            if (string.IsNullOrEmpty(text) && message.ForwardOrigin == null)
+            if (string.IsNullOrEmpty(text) && message.ForwardOrigin is null)
             {
                 return;
             }
@@ -45,38 +64,38 @@ public static class UpdateHandler
                 await botClient.SendMessage(chatId, Strings.Welcome, ParseMode.Markdown,
                     linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true },
                     cancellationToken: cancellationToken);
-                return;
             }
-
-            if (text.StartsWith("/register"))
+            else if (text.StartsWith("/register"))
             {
-                await UserRegistrator.RegisterAsync(botClient, message, text, userId, cancellationToken);
-                return;
+                await UserRegistrator.SaveTokenAsync(botClient, message, text, user, cancellationToken);
             }
-
-            if (text.StartsWith("/lang"))
+            else if (text == "/settings")
             {
-                await ChangeLanguageAsync(botClient, user, message, db, cancellationToken);
-                return;
+                await CallbackHandler.ShowSettingsMenuAsync(botClient, message.Chat.Id, user, cancellationToken);
+            }
+            else
+            {
+                await SaveNoteAsync(botClient, message, text, user, cancellationToken);
             }
 
-            await SaveNoteAsync(botClient, message, text, userId, cancellationToken);
+            if (dbContext.ChangeTracker.HasChanges())
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"Ошибка при обработке сообщения: {ex.Message}");
+            Console.WriteLine($@"Error with creating note: {ex.Message}");
             await botClient.SendMessage(chatId, Strings.ErrorSendMessage,
                 cancellationToken: cancellationToken);
         }
     }
 
-    private static async Task SaveNoteAsync(ITelegramBotClient botClient, Message message, string text, long userId,
+    private static async Task SaveNoteAsync(ITelegramBotClient botClient, Message message, string text,
+        UserSettings user,
         CancellationToken cancellationToken)
     {
-        await using var db = new BotDbContext();
-        var user = await db.Users.FindAsync([userId], cancellationToken);
-
-        if (user == null || string.IsNullOrEmpty(user.GithubToken))
+        if (string.IsNullOrEmpty(user.GithubToken))
         {
             await botClient.SendMessage(message.Chat.Id, Strings.InfoRegistration,
                 cancellationToken: cancellationToken);
@@ -136,21 +155,5 @@ public static class UpdateHandler
             await botClient.SendMessage(message.Chat.Id, Strings.ErrorInvalidToken,
                 cancellationToken: cancellationToken);
         }
-    }
-
-    private static async Task ChangeLanguageAsync(ITelegramBotClient botClient, UserSettings? user, Message message,
-        BotDbContext db, CancellationToken ct)
-    {
-        if (user is null)
-        {
-            return;
-        }
-
-        user.LanguageCode = user.LanguageCode == "ru" ? "en" : "ru";
-        await db.SaveChangesAsync(ct);
-
-        CultureInfo.CurrentUICulture = new CultureInfo(user.LanguageCode);
-
-        await botClient.SendMessage(message.Chat.Id, Strings.InfoLanguageChanged, cancellationToken: ct);
     }
 }

@@ -66,4 +66,28 @@ Instructions for obtaining a token:
     <data name="ForwardedFrom" xml:space="preserve">
         <value>ForwardedFrom</value>
     </data>
+    <data name="BotSettings" xml:space="preserve">
+        <value>⚙️ Your bot's settings:</value>
+    </data>
+    <data name="DownloadImages" xml:space="preserve">
+        <value>🖼 Download photo:</value>
+    </data>
+    <data name="InfoLanguage" xml:space="preserve">
+        <value>🌐 Language:</value>
+    </data>
+    <data name="Russian" xml:space="preserve">
+        <value>Russian</value>
+    </data>
+    <data name="English" xml:space="preserve">
+        <value>English</value>
+    </data>
+    <data name="On" xml:space="preserve">
+        <value>✅ On</value>
+    </data>
+    <data name="Off" xml:space="preserve">
+        <value>❌ Off</value>
+    </data>
+    <data name="SettingsUpdated" xml:space="preserve">
+        <value>Settings have been updated!</value>
+    </data>
 </root>

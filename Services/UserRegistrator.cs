@@ -9,7 +9,8 @@ namespace MdNoteToGithub.Services;
 
 public static class UserRegistrator
 {
-    public static async Task RegisterAsync(ITelegramBotClient botClient, Message message, string text, long userId,
+    public static async Task SaveTokenAsync(ITelegramBotClient botClient, Message message, string text,
+        UserSettings user,
         CancellationToken cancellationToken)
     {
         var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -21,25 +22,11 @@ public static class UserRegistrator
             return;
         }
 
-        var token = parts[1];
         var repoParts = parts[2].Split('/');
-        var owner = repoParts[0];
-        var repo = repoParts[1];
 
-        await using var db = new BotDbContext();
-        var user = await db.Users.FindAsync([userId], cancellationToken);
-
-        if (user == null)
-        {
-            user = new UserSettings { TelegramId = userId };
-            db.Users.Add(user);
-        }
-
-        user.GithubToken = token;
-        user.RepoOwner = owner;
-        user.RepoName = repo;
-
-        await db.SaveChangesAsync(cancellationToken);
+        user.GithubToken = parts[1];
+        user.RepoOwner = repoParts[0];
+        user.RepoName = repoParts[1];
 
         try
         {
@@ -50,8 +37,25 @@ public static class UserRegistrator
             // Ignore if the bot was unable to delete it (e.g. lacks permissions)
         }
 
-        await botClient.SendMessage(message.Chat.Id,
-            "? Регистрация успешна! Твой токен в безопасности, а сообщение удалено.\nТеперь просто отправляй мне текст, и я буду создавать заметки.",
+        await botClient.SendMessage(message.Chat.Id, Strings.InfoRegistration,
             cancellationToken: cancellationToken);
+    }
+
+    public static async Task<UserSettings> GetOrCreateUserAsync(long userId, BotDbContext dbContext,
+        string? languageCode,
+        CancellationToken cancellationToken)
+    {
+        var user = await dbContext.Users.FindAsync([userId], cancellationToken);
+        if (user is null)
+        {
+            user = new UserSettings
+            {
+                TelegramId = userId,
+                LanguageCode = languageCode ?? "ru",
+            };
+            await dbContext.Users.AddAsync(user, cancellationToken);
+        }
+
+        return user;
     }
 }
