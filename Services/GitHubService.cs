@@ -62,7 +62,7 @@ public static class GitHubService
                     Sha = blobReference.Sha,
                 });
 
-                imageContentMarkdown += $"\n![[{imgName}]]" + Environment.NewLine;
+                imageContentMarkdown += $"\n![[{imgName}||600x600]]";
             }
             catch (Exception ex)
             {
