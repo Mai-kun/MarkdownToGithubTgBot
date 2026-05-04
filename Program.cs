@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using ObsidianTgBot.DataBase;
-using ObsidianTgBot.Handlers;
+using Microsoft.Extensions.Configuration;
+using MdNoteToGithub.DataBase;
+using MdNoteToGithub.Handlers;
 using Telegram.Bot;
 
 var config = new ConfigurationBuilder()
@@ -33,7 +33,7 @@ botClient.StartReceiving(
 );
 
 var me = await botClient.GetMe();
-Console.WriteLine($@"✅ Bot @{me.Username} started and ready to work.");
+Console.WriteLine($@"Bot @{me.Username} started and ready to work.");
 Console.WriteLine(@"Press Enter to stop...");
 Console.ReadLine();
 

@@ -1,4 +1,4 @@
-﻿namespace ObsidianTgBot.Models;
+namespace MdNoteToGithub.Models;
 
 public class UserSettings
 {

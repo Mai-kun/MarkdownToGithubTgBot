@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ObsidianTgBot.Models;
+using Microsoft.EntityFrameworkCore;
+using MdNoteToGithub.Models;
 
-namespace ObsidianTgBot.DataBase;
+namespace MdNoteToGithub.DataBase;
 
 public class BotDbContext : DbContext
 {

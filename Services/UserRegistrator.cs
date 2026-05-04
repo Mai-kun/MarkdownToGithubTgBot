@@ -1,11 +1,11 @@
-п»їusing ObsidianTgBot.DataBase;
-using ObsidianTgBot.Models;
-using ObsidianTgBot.Resources;
+using MdNoteToGithub.DataBase;
+using MdNoteToGithub.Models;
+using MdNoteToGithub.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace ObsidianTgBot.Services;
+namespace MdNoteToGithub.Services;
 
 public static class UserRegistrator
 {
@@ -51,7 +51,7 @@ public static class UserRegistrator
         }
 
         await botClient.SendMessage(message.Chat.Id,
-            "вњ… Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓСЃРїРµС€РЅР°! РўРІРѕР№ С‚РѕРєРµРЅ РІ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё, Р° СЃРѕРѕР±С‰РµРЅРёРµ СѓРґР°Р»РµРЅРѕ.\nРўРµРїРµСЂСЊ РїСЂРѕСЃС‚Рѕ РѕС‚РїСЂР°РІР»СЏР№ РјРЅРµ С‚РµРєСЃС‚, Рё СЏ Р±СѓРґСѓ СЃРѕР·РґР°РІР°С‚СЊ Р·Р°РјРµС‚РєРё.",
+            "? Регистрация успешна! Твой токен в безопасности, а сообщение удалено.\nТеперь просто отправляй мне текст, и я буду создавать заметки.",
             cancellationToken: cancellationToken);
     }
 }

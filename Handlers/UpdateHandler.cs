@@ -1,14 +1,14 @@
-п»їusing System.Globalization;
-using ObsidianTgBot.DataBase;
-using ObsidianTgBot.Models;
-using ObsidianTgBot.Resources;
-using ObsidianTgBot.Services;
+using System.Globalization;
+using MdNoteToGithub.DataBase;
+using MdNoteToGithub.Models;
+using MdNoteToGithub.Resources;
+using MdNoteToGithub.Services;
 using Octokit;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace ObsidianTgBot.Handlers;
+namespace MdNoteToGithub.Handlers;
 
 public static class UpdateHandler
 {
@@ -64,7 +64,7 @@ public static class UpdateHandler
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"РћС€РёР±РєР° РїСЂРё РѕР±СЂР°Р±РѕС‚РєРµ СЃРѕРѕР±С‰РµРЅРёСЏ: {ex.Message}");
+            Console.WriteLine($@"Ошибка при обработке сообщения: {ex.Message}");
             await botClient.SendMessage(chatId, Strings.ErrorSendMessage,
                 cancellationToken: cancellationToken);
         }
@@ -83,7 +83,7 @@ public static class UpdateHandler
             return;
         }
 
-        var ghClient = new GitHubClient(new ProductHeaderValue("ObsidianTgBot"))
+        var ghClient = new GitHubClient(new ProductHeaderValue("MdNoteToGithub"))
         {
             Credentials = new Credentials(user.GithubToken),
         };

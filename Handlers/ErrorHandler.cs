@@ -1,7 +1,7 @@
-﻿using Telegram.Bot;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 
-namespace ObsidianTgBot.Handlers;
+namespace MdNoteToGithub.Handlers;
 
 public static class ErrorHandler
 {
