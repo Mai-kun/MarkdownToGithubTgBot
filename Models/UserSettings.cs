@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Octokit;
 
 namespace MdNoteToGithub.Models;
 
@@ -18,4 +19,17 @@ public class UserSettings
 
     [MaxLength(4)]
     public string LanguageCode { get; set; } = "ru";
+
+    public GitHubClient? GetGitHubClient()
+    {
+        if (string.IsNullOrEmpty(GithubToken))
+        {
+            return null;
+        }
+
+        return new GitHubClient(new ProductHeaderValue("MdNoteToGithub"))
+        {
+            Credentials = new Credentials(GithubToken),
+        };
+    }
 }
