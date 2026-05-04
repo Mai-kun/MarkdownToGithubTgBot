@@ -15,7 +15,8 @@ public static class GitHubService
         var ghClient = user.GetGitHubClient();
         if (ghClient is null)
         {
-            await botClient.SendMessage(messages.First().Chat.Id, Strings.InfoRegistration, cancellationToken: ct);
+            await botClient.SendMessage(messages.First().Chat.Id, Strings.ErrorInvalidRegistrationFormat,
+                cancellationToken: ct);
             return;
         }
 
@@ -45,7 +46,7 @@ public static class GitHubService
                 await botClient.DownloadFile(file.FilePath!, ms, ct);
 
                 var imgName = $"img_{timestamp}_{imgIndex++}.jpg";
-                var imagePath = $"Attachments/{imgName}";
+                var imagePath = $"Archive/Images/{imgName}";
 
                 var blobReference = await ghClient.Git.Blob.Create(user.RepoOwner, user.RepoName, new NewBlob
                 {
@@ -83,7 +84,7 @@ public static class GitHubService
                         {sourceLink}
                         """;
 
-        var fileName = $"Inbox/Note_{timestamp}.md";
+        var fileName = $"Temporary/Note_{timestamp}.md";
 
         try
         {

@@ -1,3 +1,4 @@
+using MdNoteToGithub.DataBase;
 using MdNoteToGithub.Handlers;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
@@ -12,6 +13,12 @@ if (string.IsNullOrEmpty(botToken))
 {
     Console.WriteLine(@"Error: Token not found!");
     return;
+}
+
+await using (var dbContext = new BotDbContext())
+{
+    dbContext.Database.EnsureCreated();
+    Console.WriteLine(@"The database has been initialized and the tables have been created.");
 }
 
 var botClient = new TelegramBotClient(botToken);

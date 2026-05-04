@@ -42,9 +42,6 @@
     <data name="ErrorSendMessage" xml:space="preserve">
         <value>❌ Произошла ошибка. Попробуй позже.</value>
     </data>
-    <data name="InfoRegistration" xml:space="preserve">
-        <value>⚠️ Сначала зарегистрируйся с помощью команды /register.</value>
-    </data>
     <data name="InfoNoteCreated" xml:space="preserve">
         <value>✅ Заметка сохранена в папку Inbox!</value>
     </data>
@@ -90,5 +87,11 @@
     </data>
     <data name="SettingsUpdated" xml:space="preserve">
         <value>Настройки обновлены!</value>
+    </data>
+    <data name="WarningRegistration" xml:space="preserve">
+        <value>⚠️ Сначала зарегистрируйся с помощью команды /register.</value>
+    </data>
+    <data name="InfoRegistration" xml:space="preserve">
+        <value>✅ Регистрация успешна! Твой токен в безопасности, а сообщение удалено. Теперь просто отправляй мне текст, и я буду создавать заметки.</value>
     </data>
 </root>

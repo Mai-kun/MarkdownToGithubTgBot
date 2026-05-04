@@ -37,12 +37,12 @@ public static class CallbackHandler
     public static async Task ShowSettingsMenuAsync(ITelegramBotClient botClient, long chatId, UserSettings user,
         CancellationToken ct, int? messageIdToEdit = null)
     {
-        var imgStatus = user.NeedDownloadImages ? $"✅ {Strings.On}" : $"❌ {Strings.Off}";
+        var imgStatus = user.NeedDownloadImages ? $"{Strings.On}" : $"{Strings.Off}";
         var langStatus = user.LanguageCode == "ru" ? Strings.Russian : Strings.English;
 
         var inlineKeyboard = new InlineKeyboardMarkup([
-            [InlineKeyboardButton.WithCallbackData($"🖼 {Strings.DownloadImages}: {imgStatus}", "toggle_img")],
-            [InlineKeyboardButton.WithCallbackData($"🌐 {Strings.InfoLanguage}: {langStatus}", "toggle_lang")],
+            [InlineKeyboardButton.WithCallbackData($"{Strings.DownloadImages}: {imgStatus}", "toggle_img")],
+            [InlineKeyboardButton.WithCallbackData($"{Strings.InfoLanguage}: {langStatus}", "toggle_lang")],
         ]);
 
         if (messageIdToEdit.HasValue)
@@ -50,7 +50,7 @@ public static class CallbackHandler
             await botClient.EditMessageText(
                 chatId,
                 messageIdToEdit.Value,
-                $"⚙️ {Strings.BotSettings}",
+                $"⚙{Strings.BotSettings}",
                 replyMarkup: inlineKeyboard,
                 cancellationToken: ct
             );
@@ -59,7 +59,7 @@ public static class CallbackHandler
         {
             await botClient.SendMessage(
                 chatId,
-                $"⚙️ {Strings.BotSettings}",
+                $"{Strings.BotSettings}",
                 replyMarkup: inlineKeyboard,
                 cancellationToken: ct
             );

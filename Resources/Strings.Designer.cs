@@ -159,7 +159,7 @@ namespace MdNoteToGithub.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⚠️ First, sign up using the /register command..
+        ///   Looks up a localized string similar to ✅ Registration successful! Your token is secure, and the message has been deleted. Now just send me a text, and I&apos;ll create notes..
         /// </summary>
         internal static string InfoRegistration {
             get {
@@ -209,6 +209,15 @@ namespace MdNoteToGithub.Resources {
         internal static string Source {
             get {
                 return ResourceManager.GetString("Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ⚠️ First, sign up using the /register command..
+        /// </summary>
+        internal static string WarningRegistration {
+            get {
+                return ResourceManager.GetString("WarningRegistration", resourceCulture);
             }
         }
         

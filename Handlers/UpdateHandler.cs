@@ -93,11 +93,11 @@ public static class UpdateHandler
                 }
 
                 await GitHubService.SaveNoteAsync(botClient, [message], user, cancellationToken);
+            }
 
-                if (dbContext.ChangeTracker.HasChanges())
-                {
-                    await dbContext.SaveChangesAsync(cancellationToken);
-                }
+            if (dbContext.ChangeTracker.HasChanges())
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
             }
         }
         catch

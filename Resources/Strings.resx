@@ -43,7 +43,7 @@ Instructions for obtaining a token:
         <value>❌ An error occurred. Please try again later.</value>
     </data>
     <data name="InfoRegistration" xml:space="preserve">
-        <value>⚠️ First, sign up using the /register command.</value>
+        <value>✅ Registration successful! Your token is secure, and the message has been deleted. Now just send me a text, and I'll create notes.</value>
     </data>
     <data name="InfoNoteCreated" xml:space="preserve">
         <value>✅ The note has been saved to the Inbox folder!</value>
@@ -89,5 +89,8 @@ Instructions for obtaining a token:
     </data>
     <data name="SettingsUpdated" xml:space="preserve">
         <value>Settings have been updated!</value>
+    </data>
+    <data name="WarningRegistration" xml:space="preserve">
+        <value>⚠️ First, sign up using the /register command.</value>
     </data>
 </root>

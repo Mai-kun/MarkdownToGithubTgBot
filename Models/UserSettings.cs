@@ -5,7 +5,7 @@ namespace MdNoteToGithub.Models;
 
 public class UserSettings
 {
-    public bool NeedDownloadImages = false;
+    public bool NeedDownloadImages { get; set; } = false;
     public long TelegramId { get; set; }
 
     [MaxLength(256)]
