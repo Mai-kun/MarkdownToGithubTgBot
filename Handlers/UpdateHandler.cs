@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Globalization;
 using MdNoteToGithub.DataBase;
 using MdNoteToGithub.Resources;
@@ -13,8 +13,11 @@ public static class UpdateHandler
 {
     private static readonly ConcurrentDictionary<string, List<Message>> _albumCache = new();
 
-    public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
-        CancellationToken cancellationToken)
+    public static async Task HandleUpdateAsync(
+        ITelegramBotClient botClient,
+        Update update,
+        CancellationToken cancellationToken
+    )
     {
         var updateFrom = update.CallbackQuery?.From ?? update.Message?.From;
         if (updateFrom is null)
@@ -26,8 +29,12 @@ public static class UpdateHandler
         var userId = updateFrom.Id;
 
         await using var dbContext = new BotDbContext();
-        var user = await UserRegistrator.GetOrCreateUserAsync(userId, dbContext, languageCode,
-            cancellationToken);
+        var user = await UserRegistrator.GetOrCreateUserAsync(
+            userId,
+            dbContext,
+            languageCode,
+            cancellationToken
+        );
 
         if (update.CallbackQuery is not null)
         {
@@ -62,9 +69,13 @@ public static class UpdateHandler
 
             if (text.StartsWith("/start"))
             {
-                await botClient.SendMessage(chatId, Strings.Welcome, ParseMode.Markdown,
+                await botClient.SendMessage(
+                    chatId,
+                    Strings.Welcome,
+                    ParseMode.Markdown,
                     linkPreviewOptions: new LinkPreviewOptions { IsDisabled = true },
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken
+                );
             }
             else if (text.StartsWith("/register"))
             {
@@ -78,11 +89,18 @@ public static class UpdateHandler
             {
                 if (message.MediaGroupId is not null)
                 {
-                    _albumCache.AddOrUpdate(message.MediaGroupId, [message], (k, list) =>
-                    {
-                        list.Add(message);
-                        return list;
-                    });
+                    _albumCache.AddOrUpdate(
+                        message.MediaGroupId,
+                        [message],
+                        (
+                            k,
+                            list
+                        ) =>
+                        {
+                            list.Add(message);
+                            return list;
+                        }
+                    );
                     await Task.Delay(2000, cancellationToken);
                     if (_albumCache.TryRemove(message.MediaGroupId, out var messagesToProcess))
                     {
@@ -104,8 +122,11 @@ public static class UpdateHandler
             (Exception ex)
         {
             Console.WriteLine($@"Error with creating note: {ex.Message}");
-            await botClient.SendMessage(chatId, Strings.ErrorSendMessage,
-                cancellationToken: cancellationToken);
+            await botClient.SendMessage(
+                chatId,
+                Strings.ErrorSendMessage,
+                cancellationToken: cancellationToken
+            );
         }
     }
 }

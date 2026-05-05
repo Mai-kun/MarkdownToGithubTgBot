@@ -5,7 +5,6 @@ namespace MdNoteToGithub.Models;
 
 public class UserSettings
 {
-    public bool NeedDownloadImages { get; set; } = false;
     public long TelegramId { get; set; }
 
     [MaxLength(256)]
@@ -20,6 +19,8 @@ public class UserSettings
     [MaxLength(4)]
     public string LanguageCode { get; set; } = "ru";
 
+    public bool NeedDownloadImages { get; set; } = false;
+    
     public GitHubClient? GetGitHubClient()
     {
         if (string.IsNullOrEmpty(GithubToken))

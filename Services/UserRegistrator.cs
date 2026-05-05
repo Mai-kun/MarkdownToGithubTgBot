@@ -1,4 +1,4 @@
-using MdNoteToGithub.DataBase;
+﻿using MdNoteToGithub.DataBase;
 using MdNoteToGithub.Models;
 using MdNoteToGithub.Resources;
 using Telegram.Bot;
@@ -9,16 +9,24 @@ namespace MdNoteToGithub.Services;
 
 public static class UserRegistrator
 {
-    public static async Task SaveTokenAsync(ITelegramBotClient botClient, Message message, string text,
+    public static async Task SaveTokenAsync(
+        ITelegramBotClient botClient,
+        Message message,
+        string text,
         UserSettings user,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length != 3 || !parts[2].Contains('/'))
         {
-            await botClient.SendMessage(message.Chat.Id, Strings.ErrorInvalidRegistrationFormat, ParseMode.Markdown,
-                cancellationToken: cancellationToken);
+            await botClient.SendMessage(
+                message.Chat.Id,
+                Strings.ErrorInvalidRegistrationFormat,
+                ParseMode.Markdown,
+                cancellationToken: cancellationToken
+            );
             return;
         }
 
@@ -37,13 +45,19 @@ public static class UserRegistrator
             // Ignore if the bot was unable to delete it (e.g. lacks permissions)
         }
 
-        await botClient.SendMessage(message.Chat.Id, Strings.InfoRegistration,
-            cancellationToken: cancellationToken);
+        await botClient.SendMessage(
+            message.Chat.Id,
+            Strings.InfoRegistration,
+            cancellationToken: cancellationToken
+        );
     }
 
-    public static async Task<UserSettings> GetOrCreateUserAsync(long userId, BotDbContext dbContext,
+    public static async Task<UserSettings> GetOrCreateUserAsync(
+        long userId,
+        BotDbContext dbContext,
         string? languageCode,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var user = await dbContext.Users.FindAsync([userId], cancellationToken);
         if (user is null)

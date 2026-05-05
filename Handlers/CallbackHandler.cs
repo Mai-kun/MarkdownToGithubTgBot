@@ -8,9 +8,12 @@ namespace MdNoteToGithub.Handlers;
 
 public static class CallbackHandler
 {
-    public static async Task HandleCallbackQueryAsync(ITelegramBotClient botClient, CallbackQuery callbackQuery,
+    public static async Task HandleCallbackQueryAsync(
+        ITelegramBotClient botClient,
+        CallbackQuery callbackQuery,
         UserSettings user,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var chatId = callbackQuery.Message!.Chat.Id;
         var messageId = callbackQuery.Message.MessageId;
@@ -34,16 +37,23 @@ public static class CallbackHandler
         );
     }
 
-    public static async Task ShowSettingsMenuAsync(ITelegramBotClient botClient, long chatId, UserSettings user,
-        CancellationToken ct, int? messageIdToEdit = null)
+    public static async Task ShowSettingsMenuAsync(
+        ITelegramBotClient botClient,
+        long chatId,
+        UserSettings user,
+        CancellationToken ct,
+        int? messageIdToEdit = null
+    )
     {
         var imgStatus = user.NeedDownloadImages ? $"{Strings.On}" : $"{Strings.Off}";
         var langStatus = user.LanguageCode == "ru" ? Strings.Russian : Strings.English;
 
-        var inlineKeyboard = new InlineKeyboardMarkup([
-            [InlineKeyboardButton.WithCallbackData($"{Strings.DownloadImages}: {imgStatus}", "toggle_img")],
-            [InlineKeyboardButton.WithCallbackData($"{Strings.InfoLanguage}: {langStatus}", "toggle_lang")],
-        ]);
+        var inlineKeyboard = new InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton.WithCallbackData($"{Strings.DownloadImages}: {imgStatus}", "toggle_img")],
+                [InlineKeyboardButton.WithCallbackData($"{Strings.InfoLanguage}: {langStatus}", "toggle_lang")],
+            ]
+        );
 
         if (messageIdToEdit.HasValue)
         {
