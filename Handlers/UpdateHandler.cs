@@ -36,6 +36,10 @@ public static class UpdateHandler
             cancellationToken
         );
 
+        var culture = new CultureInfo(user.LanguageCode);
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.CurrentCulture = culture;
+
         if (update.CallbackQuery is not null)
         {
             await CallbackHandler.HandleCallbackQueryAsync(botClient, update.CallbackQuery, user, cancellationToken);
@@ -55,10 +59,6 @@ public static class UpdateHandler
 
         var text = message.Text?.Trim() ?? message.Caption?.Trim() ?? "";
         var chatId = message.Chat.Id;
-
-        var culture = new CultureInfo(user.LanguageCode);
-        CultureInfo.CurrentUICulture = culture;
-        CultureInfo.CurrentCulture = culture;
 
         try
         {
